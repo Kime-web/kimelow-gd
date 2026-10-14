@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0c10"><title>Kimelow.gd — Geometry Dash Tracker</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="index.html"><span class="brand-mark">K</span><span>kimelow<span class="green">.gd</span></span></a>
+  <p class="side-label">МОЙ ПРОФИЛЬ</p>
+  <nav class="nav">
+    <a class="nav-link active" href="index.html">⌂ <span>Обзор</span></a>
+    <a class="nav-link" href="tracker.html">◈ <span>Death Tracker</span></a>
+<a class="nav-link " href="runs.html">▤ <span>История забегов</span></a>
+
+    <a class="nav-link" href="demon-list.html">☠ <span>Demon List</span></a>
+    <a class="nav-link" href="completed.html">✓ <span>Пройденные</span></a>
+    <a class="nav-link" href="my-levels.html">▦ <span>Мои уровни</span></a>
+    <a class="nav-link" href="progress.html">↗ <span>Цели и статистика</span></a>
+    <a class="nav-link" href="about.html">◎ <span>Обо мне</span></a>
+  </nav>
+  <div class="sidebar-note"><span>✦</span><p>Личный архив попыток, рекордов и побед.</p></div>
+  <div class="sidebar-user"><span class="user-cube">K</span><div><b>Kimelow</b><small>Geometry Dash player</small></div><span class="online"></span></div>
+</aside>
+<main class="main" id="home">
+<header class="topbar"><button id="menuButton" class="menu-button" aria-label="Меню">☰</button><div class="crumb">KIMELOW.GD <span>/</span> <b>Личный трекер</b></div><div class="top-actions"><a class="btn subtle" href="tracker.html">Открыть уровни ↗</a><span class="avatar">K</span></div></header>
+<div class="content">
+<section class="profile-head">
+  <div class="profile-avatar">K<span></span></div><div class="profile-copy"><p class="eyebrow">GEOMETRY DASH · PERSONAL TRACKER</p><h1>Kimelow<span class="star">✦</span></h1><p>Мои демоны, рекорды, смерти и следующий заветный 100%.</p><div class="chips"><span>PLAYER</span><span>CREATOR</span><span>LOCAL SAVE</span></div></div>
+  <a class="btn primary" href="tracker.html">＋ Добавить уровень</a>
+</section>
+<section class="hero">
+  <div class="hero-content"><span class="pill"><i></i> МОЙ ПУТЬ В GD</span><h2>Ещё одна попытка.<br><em>Ещё ближе к 100%.</em></h2><p>Все твои достижения в одном месте. Перейди в трекер, чтобы записать попытки, рекорды и Start Pos.</p><a href="tracker.html" class="hero-link">Открыть Death Tracker <span>↗</span></a></div>
+  <div class="hero-visual journey-art" role="img" aria-label="Ночной игровой мир с платформами и неоновым порталом"></div>
+  <span class="hero-index">PLAYER / KIMELOW</span>
+</section>
+
+<section class="quick-pages">
+  <a class="quick-page-card" href="demon-list.html"><span class="quick-page-icon">☠</span><span><b>Demon List</b><small>Top Extreme и поиск Hard / Insane Demon</small></span><span class="quick-arrow">↗</span></a>
+  <a class="quick-page-card" href="tracker.html"><span class="quick-page-icon">◈</span><span><b>Death Tracker</b><small>Попытки, проценты и сессии</small></span><span class="quick-arrow">↗</span></a>
+  <a class="quick-page-card" href="completed.html"><span class="quick-page-icon">✓</span><span><b>Пройденные</b><small>Уровни, которые ты закрыл</small></span><span class="quick-arrow">↗</span></a>
+  <a class="quick-page-card" href="my-levels.html"><span class="quick-page-icon">▦</span><span><b>Мои уровни</b><small>Твои собственные работы</small></span><span class="quick-arrow">↗</span></a>
+  <a class="quick-page-card" href="progress.html"><span class="quick-page-icon">↗</span><span><b>Цели и статистика</b><small>Прогресс и история рекордов</small></span><span class="quick-arrow">↗</span></a>
+  <a class="quick-page-card" href="about.html"><span class="quick-page-icon">◎</span><span><b>Обо мне</b><small>Страница профиля</small></span><span class="quick-arrow">↗</span></a>
+</section>
+
+<section class="section-title"><div><p class="eyebrow">В ЦИФРАХ</p><h2>Моя статистика</h2></div><span class="muted">Сохраняется в этом браузере</span></section>
+<section class="stats">
+  <article class="stat"><div class="stat-head"><span class="stat-icon purple">✓</span><span>ПРОЙДЕНО</span></div><strong id="statCompleted">0</strong><small>уровней завершено</small></article>
+  <article class="stat"><div class="stat-head"><span class="stat-icon green">◈</span><span>В ТРЕКЕРЕ</span></div><strong id="statTracking">0</strong><small>уровней в планах и попытках</small></article>
+  <article class="stat"><div class="stat-head"><span class="stat-icon orange">↗</span><span>ПОПЫТКИ</span></div><strong id="statAttempts">0</strong><small>всего записано</small></article>
+  <article class="stat"><div class="stat-head"><span class="stat-icon pink">✦</span><span>РЕКОРД</span></div><strong id="statBest">—</strong><small>лучший процент в трекере</small></article>
+</section>
+
+<section id="completed" class="section-title section-anchor"><div><p class="eyebrow">ACHIEVEMENTS</p><h2>Пройденные уровни</h2></div><span class="muted">Появятся после отметки «Я прошёл!»</span></section>
+<section id="completedGrid" class="completed-grid"><div class="empty-card compact"><b>Пока нет завершённых уровней</b><p>Когда пройдёшь уровень в трекере, он появится здесь.</p></div></section>
+<section id="created" class="section-title section-anchor"><div><p class="eyebrow">CREATOR MODE</p><h2>Мои уровни</h2><p class="section-sub">Твои собственные работы и ссылки на них.</p></div><button class="btn subtle" data-open="created">＋ Добавить свой уровень</button></section>
+<section id="createdGrid" class="created-grid"></section>
+<section id="goals" class="section-title section-anchor"><div><p class="eyebrow">ПРОГРЕСС</p><h2>Цели и история</h2><p class="section-sub">Ставь себе планку и наблюдай за движением вперёд.</p></div></section>
+<section class="goal-layout">
+  <article class="panel goal-panel"><div class="panel-heading"><div><b>Моя цель</b><p>Например, пройти 3 демона</p></div><span class="panel-icon">◎</span></div><form id="goalForm" class="goal-form"><label>Цель<input id="goalText" maxlength="100" placeholder="Пройти 3 демона до конца месяца"></label><div class="goal-fields"><label>Нужно пройти<input id="goalTarget" type="number" min="1" max="999" value="3"></label><label>Единица<select id="goalUnit"><option value="levels">уровней</option><option value="demons">демонов</option></select></label></div><button class="btn primary" type="submit">Сохранить цель</button></form><div id="goalDisplay" class="goal-display"><span class="muted">Цель ещё не задана.</span></div></article>
+  <article class="panel chart-panel"><div class="panel-heading"><div><b>История рекордов</b><p>Последние личные рекорды</p></div><span class="panel-icon">↗</span></div><div id="recordChart" class="record-chart"><p class="muted">Добавь рекорд — здесь появится график.</p></div><div id="recordHistory" class="record-history"></div></article>
+</section>
+<section id="about" class="about"><div><p class="eyebrow">ЗА ЭТИМ ПРОФИЛЕМ</p><h2>Это мой путь в Geometry Dash.</h2><p>Мой личный архив уровней, рекордов, попыток и маленьких побед. Данные заполняются вручную.</p></div><div class="about-mark">K<span>.</span></div></section>
+<footer><span><b class="footer-mark">K</b> kimelow.gd <span class="muted">— личная страница игрока</span></span><span>Неофициальный фанатский сайт Geometry Dash</span></footer>
+</div></main></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div><script src="home-v8.js"></script>
+<script src="config.js"></script><script src="account.js"></script>
+</body></html>

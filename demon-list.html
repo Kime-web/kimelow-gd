@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demon List — Kimelow.gd</title>
+  <link rel="stylesheet" href="styles.css">
+  
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html"><span class="brand-mark">K</span><span>kimelow<span class="green">.gd</span></span></a>
+    <p class="side-label">МОЙ ПРОФИЛЬ</p>
+    <nav class="nav"><a class="nav-link " href="index.html">⌂ <span>Обзор</span></a>
+<a class="nav-link " href="tracker.html">◈ <span>Death Tracker</span></a>
+<a class="nav-link " href="runs.html">▤ <span>История забегов</span></a>
+
+<a class="nav-link active" href="demon-list.html">☠ <span>Demon List</span></a>
+<a class="nav-link " href="completed.html">✓ <span>Пройденные</span></a>
+<a class="nav-link " href="my-levels.html">▦ <span>Мои уровни</span></a>
+<a class="nav-link " href="progress.html">↗ <span>Цели и статистика</span></a>
+<a class="nav-link " href="about.html">◎ <span>Обо мне</span></a></nav>
+    <div class="sidebar-note"><span>✦</span><p>Личный архив попыток, рекордов и побед.</p></div><div class="sidebar-user"><span class="user-cube">K</span><div><b>Kimelow</b><small>Geometry Dash player</small></div><span class="online"></span></div>
+  </aside>
+  <main class="main"><div class="content">
+    <header class="topbar"><div class="crumb">KIMELOW.GD <span>/</span> <b>DEMON LIST</b></div><div class="top-actions"><span class="avatar">K</span></div></header><header class="page-heading"><h1>Demon List</h1><p class="section-sub">Топ и поиск уровней Geometry Dash</p><a class="btn subtle" href="index.html">← На главную</a></header>
+    
+<section class="demon-panel page-panel">
+  <div class="demon-toolbar">
+    <div class="segmented demon-tabs" id="demonTabs">
+      <button class="selected" type="button" data-demon-tab="top">Top 150</button>
+      <button type="button" data-demon-tab="extreme">Extreme</button>
+      <button type="button" data-demon-tab="insane">Insane</button>
+      <button type="button" data-demon-tab="hard">Hard</button>
+    </div>
+    <label class="demon-search">⌕ <input id="demonSearch" type="search" placeholder="Название уровня..." autocomplete="off" aria-label="Поиск Demon List"></label>
+  </div>
+  <div class="demon-meta"><span id="demonStatus" role="status">Подключаем Pointercrate…</span><span id="demonCount" class="muted"></span></div>
+  <div id="demonResults" class="demon-results"><div class="demon-empty">Загружаем список…</div></div>
+  <div class="demon-footer"><span>Top 150 — рейтинг Pointercrate. Остальные сложности — поиск по названию, а не глобальный рейтинг.</span><span><a href="https://pointercrate.com/demonlist/" target="_blank" rel="noopener noreferrer">Pointercrate ↗</a> · <a href="https://gdbrowser.com/search" target="_blank" rel="noopener noreferrer">GDBrowser ↗</a></span></div>
+</section>
+
+    <footer class="site-footer"><span>Kimelow.gd · Geometry Dash personal hub</span><span>Данные сохраняются в этом браузере</span></footer>
+  </div></main>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let tab="top", listed=[];
+const diffs={extreme:10,insane:9,hard:8};
+const safeUrl = s => {try {const u=new URL(s);return /^https?:$/.test(u.protocol)?u.href:""}catch{return ""}};
+function normalize(d){return {name:d.name||"Без названия",rank:Number(d.position)||null,id:String(d.level_id||""),verifier:typeof d.verifier==="object"?(d.verifier.name||""):String(d.verifier||""),publisher:typeof d.publisher==="object"?(d.publisher.name||""):String(d.publisher||""),video:safeUrl(d.video||""),difficulty:"Extreme Demon"}}
+function draw(items){
+ $("#demonCount").textContent=items.length+" уровней";
+ if(!items.length){$("#demonResults").innerHTML='<div class="demon-empty">Ничего не найдено. Попробуй другое название.</div>';return}
+ $("#demonResults").innerHTML=items.map((d,i)=>{let id=String(d.id||"");let url=id?"https://gdbrowser.com/"+encodeURIComponent(id):"https://gdbrowser.com/search";let sub=[d.difficulty||"Extreme Demon",id?"ID "+id:"",d.verifier?"Verifier: "+d.verifier:"",d.publisher?"By "+d.publisher:""].filter(Boolean).join(" · ");return `<article class="demon-row"><div class="demon-rank ${d.rank===1?"top-one":""}">${d.rank?"#"+d.rank:i+1}</div><div class="demon-info"><h3>${esc(d.name)}</h3><p>${esc(sub)}</p></div><div class="demon-actions"><span class="demon-badge">${esc(d.difficulty||"Extreme Demon")}</span><button class="mini-btn good" type="button" data-add="${esc(d.name)}" data-id="${esc(id)}" data-diff="${esc(d.difficulty||"Extreme Demon")}" data-url="${esc(url)}">＋ В трекер</button><a class="mini-btn" href="${url}" target="_blank" rel="noopener noreferrer">Открыть ↗</a>${d.video?`<a class="mini-btn" href="${esc(d.video)}" target="_blank" rel="noopener noreferrer">Видео ↗</a>`:""}</div></article>`}).join("");
+}
+async function loadTop(){
+ $("#demonStatus").textContent="Подключаем Pointercrate…";$("#demonResults").innerHTML='<div class="demon-empty">Загружаем Top Demon List…</div>';
+ try{
+  const urls=["https://pointercrate.com/api/v2/demons/listed/?limit=100","https://pointercrate.com/api/v2/demons/listed/?after=100&limit=50"];
+  const rs=await Promise.all(urls.map(u=>fetch(u,{headers:{Accept:"application/json"}})));
+  if(rs.some(r=>!r.ok))throw Error("API error");
+  const data=await Promise.all(rs.map(r=>r.json()));
+  const arr=data.flatMap(x=>Array.isArray(x)?x:(x.results||x.data||[]));
+  const map=new Map();arr.forEach(x=>{const d=normalize(x);map.set(d.rank||d.name,d)});
+  listed=[...map.values()].sort((a,b)=>(a.rank||9999)-(b.rank||9999));
+  if(!listed.length)throw Error("No data");
+  $("#demonStatus").textContent="Источник: Pointercrate · "+new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});filterTop();
+ }catch(e){$("#demonStatus").textContent="Не удалось подключить актуальный список";$("#demonCount").textContent="";$("#demonResults").innerHTML='<div class="demon-error">Не удалось загрузить данные. Возможны ограничения сети, CORS или временная ошибка API. Рейтинг не подменяется выдуманными данными. <a href="https://pointercrate.com/demonlist/" target="_blank" rel="noopener noreferrer">Открыть Pointercrate ↗</a></div>'}
+}
+function filterTop(){let q=$("#demonSearch").value.trim().toLowerCase();draw(listed.filter(d=>(d.name+" "+d.verifier+" "+d.publisher+" "+d.id+" "+d.rank).toLowerCase().includes(q)))}
+async function searchLevels(){
+ let q=$("#demonSearch").value.trim();if(q.length<2){$("#demonStatus").textContent="Введи минимум 2 символа для поиска";$("#demonCount").textContent="";$("#demonResults").innerHTML='<div class="demon-empty">Hard Demon и Insane Demon не входят в Pointercrate Top 150. Введи название уровня для поиска.</div>';return}
+ $("#demonStatus").textContent="Ищем через GDBrowser…";$("#demonResults").innerHTML='<div class="demon-empty">Ищем уровни…</div>';
+ try{let r=await fetch(`https://gdbrowser.com/api/search/${encodeURIComponent(q)}?diff=${diffs[tab]}&type=0`);if(!r.ok)throw Error();let data=await r.json();let arr=Array.isArray(data)?data:(data.levels||[]);draw(arr.map(d=>({name:d.name||"Без названия",rank:null,id:String(d.id||d.levelID||d.level_id||""),verifier:d.author||d.creator||"",difficulty:tab==="hard"?"Hard Demon":tab==="insane"?"Insane Demon":"Extreme Demon"})));$("#demonStatus").textContent="Источник: GDBrowser · поиск по названию"}catch(e){$("#demonStatus").textContent="Поиск не удался";$("#demonCount").textContent="";$("#demonResults").innerHTML='<div class="demon-error">Не удалось загрузить поиск. <a href="https://gdbrowser.com/search" target="_blank" rel="noopener noreferrer">Открыть GDBrowser ↗</a></div>'}
+}
+$("#demonTabs").addEventListener("click",e=>{let b=e.target.closest("[data-demon-tab]");if(!b)return;tab=b.dataset.demonTab;document.querySelectorAll("[data-demon-tab]").forEach(x=>x.classList.toggle("selected",x===b));if(tab==="top"){if(listed.length)filterTop();else loadTop()}else searchLevels()});
+let timer;$("#demonSearch").addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(()=>tab==="top"?filterTop():searchLevels(),250)});
+$("#demonResults").addEventListener("click",e=>{let b=e.target.closest("[data-add]");if(!b)return;
+ try{let store=JSON.parse(localStorage.getItem("kimelow-gd-hub-data-v2")||"{}");if(!store||typeof store!=="object")store={levels:[],created:[],goal:{text:"",target:3,unit:"levels"}};let levels=Array.isArray(store.levels)?store.levels:[];let id=b.dataset.id||"";if(id&&levels.some(x=>String(x.levelId||x.level_id||"")===id)){alert("Этот уровень уже есть в трекере.");return}
+ let item={id:"lvl_"+Date.now()+"_"+Math.random().toString(36).slice(2,7),name:b.dataset.add,category:"planned",difficulty:b.dataset.diff,levelId:id,link:b.dataset.url||"",percent:0,goalPercent:100,attempts:0,date:"",notes:"Добавлен из Demon List",deaths:[],records:[],sessions:[]};levels.unshift(item);store.levels=levels;localStorage.setItem("kimelow-gd-hub-data-v2",JSON.stringify(store));alert("Уровень добавлен в локальные данные. Если не появился в основном трекере, проверь версию формата хранения.");}catch(err){alert("Не удалось сохранить уровень в этом браузере.")}});
+loadTop();
+</script>
+
+<script src="config.js"></script><script src="account.js"></script>
+</body>
+</html>

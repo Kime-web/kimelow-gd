@@ -1,0 +1,54 @@
+(()=>{
+'use strict';
+const KEY='kimelow-gd-hub-data-v2';
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const number=n=>(Number(n)||0).toLocaleString('ru-RU');
+let data;
+function read(){try{data=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{data={}};if(!Array.isArray(data.levels))data.levels=[];}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));window.kimelowSaveRemote?.();render();}
+function categoryName(c){return ({attempting:'Прохожу',planned:'Планирую',completed:'Пройден'})[c]||'Прохожу';}
+function validUrl(url){try{return ['https:','http:'].includes(new URL(url).protocol)}catch{return false}}
+function linkButton(url,title){return validUrl(url)?`<a class="mini-btn" target="_blank" rel="noopener noreferrer" href="${esc(url)}">${title} ↗</a>`:''}
+function card(l){
+ const pct=Math.min(100,Math.max(0,Number(l.percent)||0));
+ const runs=(Array.isArray(l.startPosRuns)?l.startPosRuns:[]).map((r,i)=>({...r,originalIndex:i})).reverse();
+ const deaths=Array.isArray(l.deaths)?l.deaths:[];
+ const records=(Array.isArray(l.records)?l.records:[]).slice(-3).reverse();
+ const rows=records.map(r=>`<div class="history-line"><span>Рекорд · <b>${Number(r.percent)||0}%</b></span><span>${esc(r.date||'')}</span></div>`).join('');
+ const deathCounts={};deaths.forEach(d=>{if(Number.isInteger(Number(d.percent)))deathCounts[d.percent]=(deathCounts[d.percent]||0)+1});
+ const popular=Object.entries(deathCounts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+ return `<article class="tracker-card tracker-page-card" data-level="${esc(l.id)}">
+ ${validUrl(l.cover)?`<img class="level-cover" src="${esc(l.cover)}" alt="Обложка ${esc(l.name)}" loading="lazy" onerror="this.style.display='none'">`:(typeof l.cover==='string'&&l.cover.startsWith('data:image/'))?`<img class="level-cover" src="${esc(l.cover)}" alt="Обложка ${esc(l.name)}" loading="lazy">`:`<div class="level-cover-placeholder" aria-hidden="true">◈</div>`}
+ <div class="tracker-top"><span class="level-icon">◈</span><div class="tracker-name"><h3 title="${esc(l.name)}">${esc(l.name||'Без названия')}</h3><p>${l.levelId?'ID '+esc(l.levelId)+' · ':''}${esc(l.difficulty||'Уровень')}</p></div><span class="category-pill ${['attempting','planned','completed'].includes(l.category)?l.category:'attempting'}">${categoryName(l.category)}</span></div>
+ <div class="percent-row"><div><div class="record-label">ЛУЧШИЙ РЕКОРД С НУЛЯ</div><div class="percent-big">${pct}<small>%</small></div></div><div class="record-label">ЦЕЛЬ ${Number(l.goalPercent)||100}%</div></div>
+ <div class="bar"><span style="width:${pct}%"></span></div>
+ <div class="metric-grid"><div class="metric"><b>${number(l.attempts)}</b><small>попыток</small></div><div class="metric"><b>${deaths.length}</b><small>смертей</small></div><div class="metric"><b>${runs.length}</b><small>Start Pos</small></div></div>
+ ${runs.length?`<section class="startpos-panel"><div class="startpos-title">⚑ РЕЗУЛЬТАТЫ START POS <span>${runs.length} всего</span></div><div class="startpos-runs">${runs.map(r=>`<span class="startpos-entry"><span class="startpos-chip" title="${esc(r.date||'')}">${Number(r.start)}–${Number(r.end)}%</span><button type="button" class="startpos-remove" data-action="remove-startpos" data-index="${r.originalIndex}" title="Удалить Start Pos" aria-label="Удалить Start Pos ${Number(r.start)}–${Number(r.end)}">×</button></span>`).join('')}</div></section>`:`<div class="tracker-page-hint">⚑ Start Pos пока нет. Добавь, например, <b>67–100%</b>.</div>`}
+ ${popular.length?`<div class="death-summary"><h4>ГДЕ ЧАЩЕ УМИРАЮ</h4><div class="death-pills">${popular.map(([n,count])=>`<span class="death-pill"><b>${Number(n)}%</b> ×${count}</span>`).join('')}</div></div>`:''}
+ ${rows?`<div class="history-list">${rows}</div>`:''}
+ <div class="tracker-page-controls"><div class="tracker-control-heading">ПОПЫТКИ <span>Добавить сразу несколько</span></div><div class="tracker-actions"><button class="mini-btn" data-action="add" data-count="1">+1</button><button class="mini-btn" data-action="add" data-count="10">+10</button><button class="mini-btn" data-action="add" data-count="50">+50</button><button class="mini-btn" data-action="add" data-count="100">+100</button><button class="mini-btn" data-action="custom">＋ Своё число</button><button class="mini-btn" data-action="edit">✎ Исправить</button></div></div>
+ <div class="tracker-actions tracker-page-bottom"><button class="mini-btn" data-action="cover">▣ Ссылка на обложку</button><button class="mini-btn" data-action="cover-file">↑ Загрузить фото</button><button class="mini-btn startpos-button" data-action="startpos">⚑ Start Pos</button><a class="mini-btn" href="runs.html?level=${encodeURIComponent(l.id)}">▤ Забеги 0–X</a><button class="mini-btn" data-action="record">↗ Рекорд %</button><button class="mini-btn" data-action="death">× Смерть</button>${linkButton(l.link,'Уровень')}${linkButton(l.video,'Видео')}<button class="mini-btn good" data-action="complete">✓ Пройден</button><button class="mini-btn danger" data-action="delete">Удалить</button></div>
+ </article>`;
+}
+function render(){read();const lv=data.levels;$('#statLevels').textContent=lv.length;$('#statAttempts').textContent=number(lv.reduce((a,l)=>a+(Number(l.attempts)||0),0));$('#statBest').textContent=(lv.reduce((a,l)=>Math.max(a,Number(l.percent)||0),0))+'%';$('#trackerPageList').innerHTML=lv.length?lv.map(card).join(''):'<div class="empty-card"><div class="empty-glyph">◈</div><b>Пока нет уровней</b><p>Добавь свой первый уровень, чтобы вести историю прогресса.</p><a class="btn primary" href="#addLevelPanel">＋ Добавить уровень</a></div>';}
+function askInteger(message,def,min,max){const raw=prompt(message,String(def));if(raw===null)return null;const v=Number(raw.trim());if(!/^\d+$/.test(raw.trim())||!Number.isSafeInteger(v)||v<min||v>max){alert(`Введите целое число от ${min} до ${max}.`);return null;}return v;}
+function act(l,action,b){
+ if(action==='add'||action==='custom'){const amount=action==='add'?Number(b.dataset.count):askInteger('Сколько попыток ДОБАВИТЬ?',25,1,1000000);if(amount===null)return;l.attempts=(Number(l.attempts)||0)+amount;l.sessions ||= [];let last=l.sessions.at(-1);if(last&&last.date===today()&&!last.note)last.attempts=(Number(last.attempts)||0)+amount;else l.sessions.push({date:today(),attempts:amount});}
+ else if(action==='cover'){const raw=prompt('Вставь прямую ссылку на картинку (https://...) или оставь пустым, чтобы убрать обложку:',l.cover?.startsWith('http')?l.cover:'');if(raw===null)return;if(raw.trim()&&!validUrl(raw.trim())){alert('Нужна ссылка http:// или https://');return;}l.cover=raw.trim();}
+ else if(action==='edit'){const n=askInteger('Новое ОБЩЕЕ количество попыток:',l.attempts||0,0,100000000);if(n===null)return;l.attempts=n;l.sessions ||= [];l.sessions.push({date:today(),attempts:0,note:'Исправлено общее число: '+n});}
+ else if(action==='startpos'){const raw=prompt('Введи отрезок Start Pos, например 67-100','67-100');if(raw===null)return;const m=raw.trim().match(/^(\d{1,3})\s*[-–—]\s*(\d{1,3})\s*%?$/);if(!m||Number(m[1])>=Number(m[2])||Number(m[2])>100){alert('Нужно ввести правильный отрезок, например 67-100.');return;}l.startPosRuns ||= [];l.startPosRuns.push({start:Number(m[1]),end:Number(m[2]),date:today()});}
+ else if(action==='remove-startpos'){const index=Number(b.dataset.index);if(!Number.isInteger(index)||!Array.isArray(l.startPosRuns)||index<0||index>=l.startPosRuns.length)return;if(!confirm('Удалить этот Start Pos?'))return;l.startPosRuns.splice(index,1);}
+ else if(action==='record'){const n=askInteger('Новый рекорд с 0%:',l.percent||0,0,100);if(n===null)return;l.percent=Math.max(n,Number(l.percent)||0);l.records ||= [];l.records.push({percent:n,date:today(),attempts:l.attempts||0});if(n===100)l.category='completed';}
+ else if(action==='death'){const n=askInteger('На каком проценте смерть?',67,0,100);if(n===null)return;l.deaths ||= [];l.deaths.push({percent:n,date:today(),note:''});}
+ else if(action==='complete'){l.category='completed';l.percent=100;l.records ||= [];l.records.push({percent:100,date:today(),attempts:l.attempts||0});}
+ else if(action==='delete'){if(!confirm('Удалить уровень и всю его историю?'))return;data.levels=data.levels.filter(x=>x.id!==l.id);}
+ save();
+}
+$('#trackerPageList').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const l=data.levels.find(l=>String(l.id)===b.closest('[data-level]')?.dataset.level);if(l&&b.dataset.action!=='cover-file')act(l,b.dataset.action,b);});
+const input=document.createElement('input');input.type='file';input.accept='image/png,image/jpeg,image/webp';input.hidden=true;document.body.appendChild(input);let coverLevelId=null;input.addEventListener('change',async()=>{const file=input.files?.[0];if(!file||!coverLevelId)return;if(file.size>12*1024*1024){alert('Изображение больше 12 МБ. Выбери файл поменьше.');input.value='';return;}try{const bitmap=await createImageBitmap(file);const scale=Math.min(1,900/bitmap.width,500/bitmap.height);const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();const dataUrl=canvas.toDataURL('image/webp',.72);const level=data.levels.find(l=>l.id===coverLevelId);if(!level)return;level.cover=dataUrl;save();}catch(e){alert('Не удалось загрузить изображение: '+e.message)}finally{input.value='';}});document.querySelector('#trackerPageList').addEventListener('click',e=>{const b=e.target.closest('[data-action="cover-file"]');if(!b)return;coverLevelId=b.closest('[data-level]')?.dataset.level;input.click()});
+document.querySelector('#addLevelForm')?.addEventListener('submit',e=>{e.preventDefault();const name=document.querySelector('#newLevelName').value.trim();if(!name)return;const difficulty=document.querySelector('#newLevelDifficulty').value;const attempts=Number(document.querySelector('#newLevelAttempts').value);const percent=Number(document.querySelector('#newLevelPercent').value);const id=crypto.randomUUID?.()||String(Date.now()+Math.random());data.levels.unshift({id,name,difficulty,category:'attempting',percent,goalPercent:100,attempts,levelId:'',link:'',video:'',date:today(),notes:'',cover:'',deaths:[],startPosRuns:[],records:percent?[{percent,date:today(),attempts}]:[],sessions:[]});save();e.target.reset();document.querySelector('#addLevelPanel').open=false;window.scrollTo({top:0,behavior:'smooth'});});
+window.addEventListener('storage',e=>{if(e.key===KEY)render();});
+render();
+})();

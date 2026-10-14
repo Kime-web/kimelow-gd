@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Пройденные уровни — Kimelow.gd</title>
+  <link rel="stylesheet" href="styles.css">
+  
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html"><span class="brand-mark">K</span><span>kimelow<span class="green">.gd</span></span></a>
+    <p class="side-label">МОЙ ПРОФИЛЬ</p>
+    <nav class="nav"><a class="nav-link " href="index.html">⌂ <span>Обзор</span></a>
+<a class="nav-link " href="tracker.html">◈ <span>Death Tracker</span></a>
+<a class="nav-link " href="runs.html">▤ <span>История забегов</span></a>
+
+<a class="nav-link " href="demon-list.html">☠ <span>Demon List</span></a>
+<a class="nav-link active" href="completed.html">✓ <span>Пройденные</span></a>
+<a class="nav-link " href="my-levels.html">▦ <span>Мои уровни</span></a>
+<a class="nav-link " href="progress.html">↗ <span>Цели и статистика</span></a>
+<a class="nav-link " href="about.html">◎ <span>Обо мне</span></a></nav>
+    <div class="sidebar-note"><span>✦</span><p>Личный архив попыток, рекордов и побед.</p></div><div class="sidebar-user"><span class="user-cube">K</span><div><b>Kimelow</b><small>Geometry Dash player</small></div><span class="online"></span></div>
+  </aside>
+  <main class="main"><div class="content">
+    <header class="topbar"><div class="crumb">KIMELOW.GD <span>/</span> <b>ПРОЙДЕННЫЕ УРОВНИ</b></div><div class="top-actions"><span class="avatar">K</span></div></header><header class="page-heading"><h1>Пройденные уровни</h1><p class="section-sub">Архив закрытых демонов и других уровней</p><a class="btn subtle" href="index.html">← На главную</a></header>
+    
+<section class="section-title page-panel"><div><p class="eyebrow">ACHIEVEMENTS</p><h2>Пройденные уровни</h2><p class="section-sub">Уровни, отмеченные как пройденные в твоём Death Tracker.</p></div><a class="btn subtle" href="index.html#tracker">Управлять уровнями ↗</a></section>
+<div class="completed-grid" id="completedPageList"></div>
+
+    <footer class="site-footer"><span>Kimelow.gd · Geometry Dash personal hub</span><span>Данные сохраняются в этом браузере</span></footer>
+  </div></main>
+</div>
+
+<script>
+(function(){const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));let d={};try{d=JSON.parse(localStorage.getItem("kimelow-gd-hub-data-v2")||"{}")}catch(e){}let arr=(Array.isArray(d.levels)?d.levels:[]).filter(l=>l.category==="completed"||l.completed===true||l.isCompleted===true);document.querySelector("#completedPageList").innerHTML=arr.length?arr.map(l=>`<article class="level-card"><h3>${esc(l.name||"Без названия")}</h3><p>${esc(l.difficulty||"Demon")} · ${Number(l.percent)||100}% · ${Number(l.attempts)||0} попыток</p></article>`).join(""):'<div class="empty-card"><b>Пока нет пройденных уровней</b><p>Отметь уровень как пройденный в Death Tracker, и он появится здесь.</p></div>'})();
+</script>
+
+<script src="config.js"></script><script src="account.js"></script>
+</body>
+</html>

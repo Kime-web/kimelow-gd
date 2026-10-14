@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>История забегов — Kimelow.gd</title>
+  <link rel="stylesheet" href="styles.css">
+  
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="index.html"><span class="brand-mark">K</span><span>kimelow<span class="green">.gd</span></span></a>
+    <p class="side-label">МОЙ ПРОФИЛЬ</p>
+    <nav class="nav"><a class="nav-link " href="index.html">⌂ <span>Обзор</span></a>
+<a class="nav-link " href="tracker.html">◈ <span>Death Tracker</span></a>
+<a class="nav-link active" href="runs.html">▤ <span>История забегов</span></a>
+
+<a class="nav-link " href="demon-list.html">☠ <span>Demon List</span></a>
+<a class="nav-link " href="completed.html">✓ <span>Пройденные</span></a>
+<a class="nav-link " href="my-levels.html">▦ <span>Мои уровни</span></a>
+<a class="nav-link " href="progress.html">↗ <span>Цели и статистика</span></a>
+<a class="nav-link " href="about.html">◎ <span>Обо мне</span></a></nav>
+    <div class="sidebar-note"><span>✦</span><p>Личный архив попыток, рекордов и побед.</p></div><div class="sidebar-user"><span class="user-cube">K</span><div><b>Kimelow</b><small>Geometry Dash player</small></div><span class="online"></span></div>
+  </aside>
+  <main class="main"><div class="content">
+    <header class="topbar"><div class="crumb">KIMELOW.GD <span>/</span> <b>ИСТОРИЯ ЗАБЕГОВ</b></div><div class="top-actions"><span class="avatar">K</span></div></header><header class="page-heading"><h1>▤ История забегов 0–X</h1><p class="section-sub">Записывай каждую смерть с нуля и количество повторений: 0–45x2, 0–98x4.</p><a class="btn subtle" href="tracker.html">← Death Tracker</a></header>
+<section class="page-panel run-intro"><p>Пример: <b>0–56</b>, <b>0–32</b>, <b>0–45x2</b>, <b>0–98x4</b>. Каждая запись относится только к выбранному уровню. Удаление записи не удаляет уровень.</p><div class="run-toolbar"><label for="runsLevel">Уровень</label><select id="runsLevel"></select></div><form id="runsForm" class="run-form"><label>Результаты (по одному на строку)<textarea id="runsInput" rows="5" placeholder="0-56&#10;0-32&#10;0-45x2&#10;0-98x4" required></textarea></label><button class="btn primary" type="submit">＋ Сохранить забеги</button></form><p class="run-feedback" id="runsMessage" role="status"></p></section>
+<section class="section-title"><div><p class="eyebrow">МОИ ЗАБЕГИ</p><h2>История выбранного уровня</h2></div></section>
+<div id="runsSummary" class="run-summary"></div><div id="runsList" class="run-list"></div>
+
+    <footer class="site-footer"><span>Kimelow.gd · Geometry Dash personal hub</span><span>Данные сохраняются в этом браузере</span></footer>
+  </div></main>
+</div>
+
+<script src="runs-page.js"></script>
+
+<script src="config.js"></script><script src="account.js"></script>
+</body>
+</html>
